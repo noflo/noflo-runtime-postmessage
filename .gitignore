@@ -1,0 +1,4 @@
+/node_modules/
+/browser/
+/spec/*.js
+/spec/*.xml

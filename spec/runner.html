@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>noflo-runtime-iframe in browser</title>
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css">
+    <style type="text/css">
+      #fixtures {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <div id="fixtures">
+      <iframe sandbox="allow-scripts" src="../html/iframe.html?debug" id="iframe"></iframe>
+    </div>
+    <script src="../node_modules/chai/chai.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script>
+      if (window.initMochaPhantomJS) {
+        window.initMochaPhantomJS();
+      }
+      mocha.setup('bdd');
+    </script>
+    <script src="./iframe.js"></script>
+    <script>
+      mocha.run();
+    </script>
+  </body>
+</html>
