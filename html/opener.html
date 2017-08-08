@@ -9,46 +9,32 @@
       var openClient = document.getElementById('openclient');
       var rt = require('noflo-runtime-postmessage').opener;
       var runtime = rt({
-        baseDir: 'noflo-runtime-iframe'
-      });
+        baseDir: 'noflo-runtime-postmessage'
+      }, openClient);
       openClient.addEventListener('click', function (event) {
         event.preventDefault();
         event.stopPropagation();
-        var client = window.open(openClient.getAttribute('href'), '_blank');
-        runtime.setClient(client);
-        window.addEventListener('message', function (message) {
-          var data;
-          if (typeof message.data === 'string') {
-            data = JSON.parse(message.data);
-          } else {
-            data = message.data;
-          }
-          if (data.fromClient) {
-            window.parent.postMessage(JSON.stringify({
-              fromClient: data.fromClient,
-              payload: data.payload
-            }), '*');
-            return;
-          }
+      });
+      window.addEventListener('message', function (message) {
+        var data = JSON.parse(message.data);
+        if (!data.fromClient && !data.toClient) {
+          return;
+        }
+        if (data.fromClient) {
+          window.parent.postMessage(JSON.stringify({
+            fromClient: data.fromClient,
+            payload: data.payload
+          }), '*');
+          return;
+        }
 
-          if (data.toClient) {
-            client.postMessage(JSON.stringify({
-              toClient: data.toClient,
-              payload: data.payload
-            }), '*');
-            return;
-          }
-
-          if (data.protocol && data.command) {
-            if (data.protocol === 'iframe' && data.command === 'setcontent') {
-              document.body.innerHTML = msg.payload;
-              return;
-            }
-            runtime.receive(data.protocol, data.command, data.payload, {
-              href: '*'
-            });
-          }
-        });
+        if (data.toClient) {
+          runtime.client.postMessage(JSON.stringify({
+            toClient: data.toClient,
+            payload: data.payload
+          }), '*');
+          return;
+        }
       });
       openClient.click();
     </script>
