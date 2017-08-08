@@ -3,3 +3,11 @@ node_js:
 - '6'
 before_script:
 - npm install -g grunt-cli
+deploy:
+  provider: npm
+  email: henri.bergius@iki.fi
+  api_key:
+    secure: XW56sRX6Zr2t/Bhjt2RkmH+hBnzkTgxeE6XlxePloaq3bShLj6VM8yeiWdDQiDsjI2duJkppB8kIFY1k5oQspZWPIV9+V5LEgt12H/xBiPUyTyJbLWYFLqAhe0gHHkHemZWoi2zKRcn9L8PiNibgjny5TbphL6R3NT6IYUzcoHZ1AV3Ijqsem/jJ+AiKZIem9juRmVKh0Y6LS75DuhqNAf12cVyfZunq7Prq+42zCNcjZp5hLzmG3yxo23niZwTRqy/P7x1Z2y1FxkeJuMXOQMka/3GVI8bgQ12OqugE9T3LJ4gMvgPi5D4DJaFfKxJq4DPkUIwJn7aPnZQDdUc0V5bsTjSU79vMTnzVQj9U2QVE3PmUqJ54v4e3XlZ++zn0QK1jXEWc/EUQ1IQlnuzhY/14J+ZWFJNVrhHno44tjlpKjOpgE79s9HBVoB5bQatKl5Vo/mVusVT7elMO8ymyQ9WrIvA3lzHDC75S1CDavLiUMqxOcI3PpuPjJT/olQCQ5QfurmVeA3TkLmIiDq0yUom3B0jAQ4I50wfNggu0pZrnfd54zKWb2YQ4EVnAOhA/ztY9Bk2DqBVG33uL5U0aeSuUmwrZXn6O3AFeCbeQoiZhnQeUA128y4DkTXgML98B94U1W8vl9qglXOpQMPYdRYeYfuhXYAMtRezf+Ndtdjs=
+  on:
+    tags: true
+    repo: noflo/noflo-runtime-postmessage
