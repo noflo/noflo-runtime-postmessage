@@ -1,4 +1,4 @@
-# noflo-runtime-postmessage [![Build Status](https://secure.travis-ci.org/noflo/noflo-runtime-postmessage.png?branch=master)](http://travis-ci.org/noflo/noflo-runtime-postmessage)
+# noflo-runtime-postmessage [![Build Status](https://travis-ci.org/noflo/noflo-runtime-postmessage.svg?branch=master)](https://travis-ci.org/noflo/noflo-runtime-postmessage)
 
 NoFlo runtime for `postMessage` communications, including:
 
