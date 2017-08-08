@@ -39,11 +39,12 @@ describe 'PARENT network runtime', ->
           window.removeEventListener 'message', listener, false
           msg = message.data
           msg = JSON.parse msg
-          chai.expect(msg.protocol).to.equal 'runtime'
-          chai.expect(msg.command).to.equal 'runtime'
-          chai.expect(msg.payload).to.be.an 'object'
-          chai.expect(msg.payload.type).to.equal 'noflo-browser'
-          chai.expect(msg.payload.capabilities).to.be.an 'array'
+          return unless msg.fromClient
+          chai.expect(msg.payload.protocol).to.equal 'runtime'
+          chai.expect(msg.payload.command).to.equal 'runtime'
+          chai.expect(msg.payload.payload).to.be.an 'object'
+          chai.expect(msg.payload.payload.type).to.equal 'noflo-browser'
+          chai.expect(msg.payload.payload.capabilities).to.be.an 'array'
           done()
         window.addEventListener 'message', listener, false
         send 'runtime', 'getruntime', ''
@@ -256,7 +257,9 @@ describe 'PARENT network runtime', ->
       it 'should receive some known components', (done) ->
         received = 0
         listener = (message) ->
-          msg = JSON.parse message.data
+          originalMessage = JSON.parse message.data
+          return unless originalMessage.fromClient
+          msg = originalMessage.payload
           return unless msg.protocol is 'component'
 
           if msg.command is 'component'
