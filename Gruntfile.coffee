@@ -27,9 +27,12 @@ module.exports = ->
 
     # Web server for the browser tests
     connect:
-      server:
+      spec:
         options:
           port: 8000
+      iframe:
+        options:
+          port: 8001
 
     # BDD tests on browser
     mocha_phantomjs:
