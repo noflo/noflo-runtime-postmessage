@@ -189,7 +189,7 @@ describe 'IFRAME network runtime', ->
         done()
       window.addEventListener 'message', listener, false
       send 'graph', 'clear',
-        baseDir: '/noflo-runtime-iframe'
+        baseDir: '/noflo-runtime-postmessage'
         id: 'bar'
         main: true
       send 'graph', 'addnode',
