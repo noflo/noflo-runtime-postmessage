@@ -7,7 +7,7 @@
     <a href="http://localhost:8002/html/client.html" id="openclient">Open client</a>
     <script>
       var openClient = document.getElementById('openclient');
-      var rt = require('noflo-runtime-postmessage').parent;
+      var rt = require('noflo-runtime-postmessage').opener;
       var runtime = rt({
         baseDir: 'noflo-runtime-iframe'
       });

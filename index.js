@@ -1,4 +1,4 @@
 module.exports = {
   iframe: require('./runtime/iframe'),
-  'parent': require('./runtime/parent')
+  opener: require('./runtime/opener')
 };

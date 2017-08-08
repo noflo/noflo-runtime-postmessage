@@ -21,13 +21,13 @@
       mocha.setup('bdd');
     </script>
     <script src="./iframe.js"></script>
-    <script src="./parent.js"></script>
+    <script src="./opener.js"></script>
     <script>
       mocha.run();
     </script>
     <div id="fixtures">
       <iframe sandbox="allow-scripts" src="http://localhost:8001/html/iframe.html?debug" id="iframe"></iframe>
-      <iframe sandbox="allow-scripts allow-popups" src="http://localhost:8001/html/parent.html?debug" id="parent"></iframe>
+      <iframe sandbox="allow-scripts allow-popups" src="http://localhost:8001/html/opener.html?debug" id="opener"></iframe>
     </div>
   </body>
 </html>

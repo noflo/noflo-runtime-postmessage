@@ -1,4 +1,4 @@
-describe 'PARENT network runtime', ->
+describe 'OPENER network runtime', ->
   iframe = null
   origin = null
 
@@ -27,7 +27,7 @@ describe 'PARENT network runtime', ->
         done()
     window.addEventListener 'message', listener, false
   before (done) ->
-    iframeElement = document.getElementById 'parent'
+    iframeElement = document.getElementById 'opener'
     iframe = iframeElement.contentWindow
     origin = window.location.origin
     done()
