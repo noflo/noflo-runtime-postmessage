@@ -12,9 +12,6 @@
   </head>
   <body>
     <div id="mocha"></div>
-    <div id="fixtures">
-      <iframe sandbox="allow-scripts" src="../html/iframe.html?debug" id="iframe"></iframe>
-    </div>
     <script src="../node_modules/chai/chai.js"></script>
     <script src="../node_modules/mocha/mocha.js"></script>
     <script>
@@ -27,5 +24,8 @@
     <script>
       mocha.run();
     </script>
+    <div id="fixtures">
+      <iframe sandbox="allow-scripts" src="../html/iframe.html?debug" id="iframe"></iframe>
+    </div>
   </body>
 </html>
