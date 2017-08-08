@@ -3,6 +3,7 @@
 
   var IframeRuntime = function (options) {
     PostMessage.call(this, options);
+    this.setClient(context.parent);
   };
   IframeRuntime.prototype = new PostMessage;
 

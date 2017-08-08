@@ -12,7 +12,7 @@
         self.send('network', 'error', {
           message: err.toString()
         }, {
-          href: this.context ? this.context.href : context.parent.location.href
+          href: this.context ? this.context.href : this.client.location.href
         });
         console.error(err);
         return true;
@@ -35,8 +35,12 @@
     this.receive = this.prototype.receive;
     this.canDo = this.prototype.canDo;
     this.getPermitted = this.prototype.getPermitted;
+    this.client = null;
   };
   PostMessage.prototype = Base;
+  PostMessage.prototype.setClient = function (client) {
+    this.client = client;
+  };
   PostMessage.prototype.send = function (protocol, topic, payload, ctx) {
     if (payload instanceof Error) {
       payload = {
@@ -46,7 +50,7 @@
     if (this.context) {
       ctx = this.context;
     }
-    context.parent.postMessage(JSON.stringify({
+    this.client.postMessage(JSON.stringify({
       protocol: protocol,
       command: topic,
       payload: payload
