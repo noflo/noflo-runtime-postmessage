@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FBP runtime client</title>
+    <script>
+      window.addEventListener('message', function (message) {
+        var data;
+        if (typeof message.data === 'string') {
+          data = JSON.parse(message.data);
+        } else {
+          data = message.data;
+        }
+        if (data.toClient) {
+          // Command to send to runtime
+          window.opener.postMessage(JSON.stringify(data.payload), '*');
+          return;
+        }
+
+        window.opener.postMessage(JSON.stringify({
+          fromClient: true,
+          payload: data
+        }), '*');
+      });
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

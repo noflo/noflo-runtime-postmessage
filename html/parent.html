@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../browser/noflo-runtime-postmessage.js"></script>
+  </head>
+  <body>
+    <a href="http://localhost:8002/html/client.html" id="openclient">Open client</a>
+    <script>
+      var openClient = document.getElementById('openclient');
+      var rt = require('noflo-runtime-postmessage').parent;
+      var runtime = rt({
+        baseDir: 'noflo-runtime-iframe'
+      });
+      openClient.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var client = window.open(openClient.getAttribute('href'), '_blank');
+        runtime.setClient(client);
+        window.addEventListener('message', function (message) {
+          var data;
+          if (typeof message.data === 'string') {
+            data = JSON.parse(message.data);
+          } else {
+            data = message.data;
+          }
+          if (data.fromClient) {
+            window.parent.postMessage(JSON.stringify({
+              fromClient: data.fromClient,
+              payload: data.payload
+            }), '*');
+            return;
+          }
+
+          if (data.toClient) {
+            client.postMessage(JSON.stringify({
+              toClient: data.toClient,
+              payload: data.payload
+            }), '*');
+            return;
+          }
+
+          if (data.protocol && data.command) {
+            if (data.protocol === 'iframe' && data.command === 'setcontent') {
+              document.body.innerHTML = msg.payload;
+              return;
+            }
+            runtime.receive(data.protocol, data.command, data.payload, {
+              href: '*'
+            });
+          }
+        });
+      });
+      openClient.click();
+    </script>
+  </body>
+</html>
