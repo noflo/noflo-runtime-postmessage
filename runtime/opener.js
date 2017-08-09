@@ -37,20 +37,18 @@
         document.body.innerHTML = msg.payload;
         return;
       }
-      runtime.receive(data.protocol, data.command, data.payload, {
-        href: '*'
-      });
-    };
+      this.receive(data.protocol, data.command, data.payload, this.context);
+    }.bind(this);
     if (client.addEventListener) {
       client.addEventListener('beforeunload', function () {
         // Client window was closed
-        runtime.setClient(null);
+        this.setClient(null);
         window.removeEventListener('message', handleMessage);
-      });
+      }.bind(this));
     }
 
     // Register client window and subscribe to messages
-    runtime.setClient(client);
+    this.setClient(client);
     window.addEventListener('message', handleMessage);
   };
 
