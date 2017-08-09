@@ -9,11 +9,13 @@
 
     if (options.catchExceptions) {
       context.onerror = function (err) {
-        self.send('network', 'error', {
-          message: err.toString()
-        }, {
-          href: this.context ? this.context.href : this.client.location.href
-        });
+        if (this.client) {
+          self.send('network', 'error', {
+            message: err.toString()
+          }, {
+            href: this.context ? this.context.href : this.client.location.href
+          });
+        }
         console.error(err);
         return true;
       }.bind(this);
@@ -42,6 +44,9 @@
     this.client = client;
   };
   PostMessage.prototype.send = function (protocol, topic, payload, ctx) {
+    if (!this.client) {
+      return;
+    }
     if (payload instanceof Error) {
       payload = {
         message: payload.toString()
