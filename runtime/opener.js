@@ -32,11 +32,6 @@
       if (!data.protocol || !data.command) {
         return;
       }
-
-      if (data.protocol === 'iframe' && data.command === 'setcontent') {
-        document.body.innerHTML = msg.payload;
-        return;
-      }
       this.receive(data.protocol, data.command, data.payload, this.context);
     }.bind(this);
     if (client.addEventListener) {
