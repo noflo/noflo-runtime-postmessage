@@ -34,13 +34,14 @@
       }
       this.receive(data.protocol, data.command, data.payload, this.context);
     }.bind(this);
-    if (client.addEventListener) {
-      client.addEventListener('beforeunload', function () {
+    var closeCheck = setInterval(function () {
+      if (!client || client.closed) {
         // Client window was closed
         this.setClient(null);
         window.removeEventListener('message', handleMessage);
-      }.bind(this));
-    }
+        clearInterval(closeCheck);
+      }
+    }.bind(this), 1000);
 
     // Register client window and subscribe to messages
     this.setClient(client);
