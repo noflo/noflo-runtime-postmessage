@@ -18,6 +18,9 @@
     if (!client) {
       throw new Error("Unable to open client window");
     }
+    this.context = {
+      href: '*'
+    };
     var handleMessage = function (message) {
       var data;
       if (typeof message.data === 'string') {
