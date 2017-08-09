@@ -33,6 +33,9 @@ module.exports = ->
       iframe:
         options:
           port: 8001
+      client:
+        options:
+          port: 8002
 
     # BDD tests on browser
     mocha_phantomjs:

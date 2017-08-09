@@ -1,34 +1,36 @@
-describe 'IFRAME network runtime', ->
+describe 'OPENER network runtime', ->
   iframe = null
   origin = null
 
   send = (protocol, command, payload) ->
     msg =
-      protocol: protocol
-      command: command
-      payload: payload
+      toClient: true
+      payload:
+        protocol: protocol
+        command: command
+        payload: payload
     serialized = JSON.stringify msg
     iframe.postMessage serialized, '*'
   receive = (protocol, expects, done) ->
     listener = (message) ->
       msg = JSON.parse message.data
-      return if msg.protocol isnt protocol
+      return unless msg.fromClient
+      return if msg.payload.protocol isnt protocol
       expected = expects.shift()
       return done() unless expected
       unless expected.payload
-        chai.expect(msg.command).to.equal expected.command
+        chai.expect(msg.payload.command).to.equal expected.command
       else
-        chai.expect(msg).to.eql expected
+        chai.expect(msg.payload).to.eql expected
       if expects.length is 0
         window.removeEventListener 'message', listener, false
         done()
     window.addEventListener 'message', listener, false
   before (done) ->
-    iframeElement = document.getElementById 'iframe'
+    iframeElement = document.getElementById 'opener'
     iframe = iframeElement.contentWindow
     origin = window.location.origin
-    iframeElement.onload = ->
-      done()
+    done()
 
   describe 'Runtime Protocol', ->
     describe 'requesting runtime metadata', ->
@@ -37,11 +39,12 @@ describe 'IFRAME network runtime', ->
           window.removeEventListener 'message', listener, false
           msg = message.data
           msg = JSON.parse msg
-          chai.expect(msg.protocol).to.equal 'runtime'
-          chai.expect(msg.command).to.equal 'runtime'
-          chai.expect(msg.payload).to.be.an 'object'
-          chai.expect(msg.payload.type).to.equal 'noflo-browser'
-          chai.expect(msg.payload.capabilities).to.be.an 'array'
+          return unless msg.fromClient
+          chai.expect(msg.payload.protocol).to.equal 'runtime'
+          chai.expect(msg.payload.command).to.equal 'runtime'
+          chai.expect(msg.payload.payload).to.be.an 'object'
+          chai.expect(msg.payload.payload.type).to.equal 'noflo-browser'
+          chai.expect(msg.payload.payload.capabilities).to.be.an 'array'
           done()
         window.addEventListener 'message', listener, false
         send 'runtime', 'getruntime', ''
@@ -254,7 +257,9 @@ describe 'IFRAME network runtime', ->
       it 'should receive some known components', (done) ->
         received = 0
         listener = (message) ->
-          msg = JSON.parse message.data
+          originalMessage = JSON.parse message.data
+          return unless originalMessage.fromClient
+          msg = originalMessage.payload
           return unless msg.protocol is 'component'
 
           if msg.command is 'component'

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../browser/noflo-runtime-postmessage.js"></script>
+  </head>
+  <body>
+    <a href="http://localhost:8002/html/client.html" id="openclient">Open client</a>
+    <script>
+      var openClient = document.getElementById('openclient');
+      var rt = require('noflo-runtime-postmessage').opener;
+      var runtime = rt({
+        baseDir: 'noflo-runtime-postmessage'
+      }, openClient);
+      openClient.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      });
+      window.addEventListener('message', function (message) {
+        var data = JSON.parse(message.data);
+        if (!data.fromClient && !data.toClient) {
+          return;
+        }
+        if (data.fromClient) {
+          window.parent.postMessage(JSON.stringify({
+            fromClient: data.fromClient,
+            payload: data.payload
+          }), '*');
+          return;
+        }
+
+        if (data.toClient) {
+          runtime.client.postMessage(JSON.stringify({
+            toClient: data.toClient,
+            payload: data.payload
+          }), '*');
+          return;
+        }
+      });
+      openClient.click();
+    </script>
+  </body>
+</html>
