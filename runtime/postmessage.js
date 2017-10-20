@@ -10,9 +10,7 @@
     if (options.catchExceptions) {
       context.onerror = function (err) {
         if (this.client) {
-          self.send('network', 'error', {
-            message: err.toString()
-          }, {
+          self.send('network', 'error', err, {
             href: this.context ? this.context.href : this.client.location.href
           });
         }
@@ -49,7 +47,8 @@
     }
     if (payload instanceof Error) {
       payload = {
-        message: payload.toString()
+        message: payload.message,
+        stack: payload.stack
       };
     }
     if (this.context) {
