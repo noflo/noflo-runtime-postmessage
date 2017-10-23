@@ -10,7 +10,7 @@
     if (options.catchExceptions) {
       context.onerror = function (err) {
         if (this.client) {
-          self.send('network', 'error', err, {
+          this.send('network', 'error', err, {
             href: this.context ? this.context.href : this.client.location.href
           });
         }
