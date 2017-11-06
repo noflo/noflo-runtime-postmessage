@@ -1,32 +1,30 @@
-(function (context) {
-  var PostMessage = require('./postmessage');
+const PostMessage = require('./postmessage');
+const utils = require('./utils');
 
-  var OpenerRuntime = function (options, button) {
-    PostMessage.call(this, options);
+class OpenerRuntime extends PostMessage {
+  constructor(options, button) {
+    super(options);
     if (button) {
-      button.addEventListener('click', function (event) {
+      button.addEventListener('click', (event) => {
         event.preventDefault();
         event.stopPropagation();
         this.openClient(button.getAttribute('href'));
-      }.bind(this));
+      });
     }
-  };
-  OpenerRuntime.prototype = new PostMessage;
+  }
 
-  OpenerRuntime.prototype.openClient = function (url) {
-    var client = window.open(url, '_blank');
+  openClient(url) {
+    const client = window.open(url, '_blank');
     if (!client) {
-      throw new Error("Unable to open client window");
+      throw new Error(`Unable to open client window at '${url}'`);
     }
     this.context = {
-      href: '*'
+      href: '*',
     };
-    var handleMessage = function (message) {
-      var data;
+    const handleMessage = function (message) {
+      let { data } = message;
       if (typeof message.data === 'string') {
         data = JSON.parse(message.data);
-      } else {
-        data = message.data;
       }
 
       if (!data.protocol || !data.command) {
@@ -34,24 +32,23 @@
       }
       this.receive(data.protocol, data.command, data.payload, this.context);
     }.bind(this);
-    var closeCheck = setInterval(function () {
+    const closeCheck = setInterval(() => {
       if (!client || client.closed) {
         // Client window was closed
         this.setClient(null);
         window.removeEventListener('message', handleMessage);
         clearInterval(closeCheck);
       }
-    }.bind(this), 1000);
+    }, 1000);
 
     // Register client window and subscribe to messages
     this.setClient(client);
     window.addEventListener('message', handleMessage);
-  };
+  }
+}
 
-  module.exports = function (options, button) {
-    options = PostMessage.normalizeOptions(options);
-    var runtime = new OpenerRuntime(options, button);
-    return runtime;
-  };
-})(window);
-
+module.exports = function (options, button) {
+  const normalizedOptions = utils.normalizeOptions(options);
+  const runtime = new OpenerRuntime(normalizedOptions, button);
+  return runtime;
+};

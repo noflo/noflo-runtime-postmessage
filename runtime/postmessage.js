@@ -1,17 +1,14 @@
-(function (context) {
-  var noflo = require('noflo');
-  var Base = require('noflo-runtime-base');
+const Base = require('noflo-runtime-base');
 
-  var PostMessage = function (options) {
-    if (!options) {
-      options = {};
-    }
-
-    if (options.catchExceptions) {
-      context.onerror = function (err) {
+class PostMessage extends Base {
+  constructor(options = {}) {
+    const normalizedOptions = options;
+    super(normalizedOptions);
+    if (normalizedOptions.catchExceptions) {
+      window.onerror = function (err) {
         if (this.client) {
           this.send('network', 'error', err, {
-            href: this.context ? this.context.href : this.client.location.href
+            href: this.context ? this.context.href : this.client.location.href,
           });
         }
         console.error(err);
@@ -19,82 +16,50 @@
       }.bind(this);
     }
 
-    if (!options.defaultPermissions) {
+    if (!normalizedOptions.defaultPermissions.length) {
       // The iframe runtime is run on user's own computer, so default to all access allowed
-      options.defaultPermissions = [
+      normalizedOptions.defaultPermissions = [
         'protocol:graph',
         'protocol:component',
         'protocol:network',
         'protocol:runtime',
         'component:setsource',
-        'component:getsource'
+        'component:getsource',
       ];
     }
-
-    this.prototype.constructor.apply(this, arguments);
-    this.receive = this.prototype.receive;
-    this.canDo = this.prototype.canDo;
-    this.getPermitted = this.prototype.getPermitted;
     this.client = null;
-  };
-  PostMessage.prototype = Base;
-  PostMessage.prototype.setClient = function (client) {
+  }
+
+  setClient(client) {
     this.client = client;
-  };
-  PostMessage.prototype.send = function (protocol, topic, payload, ctx) {
+  }
+
+  send(protocol, topic, payload, ctx) {
     if (!this.client) {
       return;
     }
+    let normalizedPayload = payload;
     if (payload instanceof Error) {
-      payload = {
+      normalizedPayload = {
         message: payload.message,
-        stack: payload.stack
+        stack: payload.stack,
       };
     }
-    if (this.context) {
-      ctx = this.context;
+    let { context } = this;
+    if (!context) {
+      context = ctx;
     }
     this.client.postMessage(JSON.stringify({
-      protocol: protocol,
+      protocol,
       command: topic,
-      payload: payload
-    }), ctx.href);
-    this.prototype.send.apply(this, arguments);
-  };
-  PostMessage.prototype.sendAll = function (protocol, topic, payload) {
-    this.send(protocol, topic, payload, window.context);
-  };
-  PostMessage.prototype.start = function () {
-    // Ignored, nothing to do
-  };
+      payload: normalizedPayload,
+    }), context.href);
+    super.send(protocol, topic, payload, context);
+  }
 
-  PostMessage.normalizeOptions = function (options) {
-    if (typeof options.catchExceptions === 'undefined') {
-      options.catchExceptions = true;
-      if (context.location.search && context.location.search.substring(1) === 'debug') {
-        options.catchExceptions = false;
-      }
-    }
-    return options;
-  };
+  sendAll(protocol, topic, payload) {
+    this.send(protocol, topic, payload, this.context);
+  }
+}
 
-  PostMessage.subscribe = function (ctx, callback) {
-    ctx.addEventListener('message', function (message) {
-      var data;
-      if (typeof message.data === 'string') {
-        data = JSON.parse(message.data);
-      } else {
-        data = message.data;
-      }
-      if (!data.protocol) {
-        return;
-      }
-      if (!data.command) {
-        return;
-      }
-      callback(data, message);
-    });
-  };
-
-  module.exports = PostMessage;
-})(window);
+module.exports = PostMessage;
