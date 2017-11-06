@@ -17,6 +17,9 @@
   "main": "index.js",
   "devDependencies": {
     "chai": "^4.0.0",
+    "eslint": "^4.10.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0",
     "grunt": "^1.0.1",
     "grunt-coffeelint": "^0.0.16",
     "grunt-contrib-coffee": "^2.0.0",
@@ -31,6 +34,7 @@
     "noflo"
   ],
   "scripts": {
+    "pretest": "eslint runtime/*.js",
     "test": "grunt test"
   }
 }
