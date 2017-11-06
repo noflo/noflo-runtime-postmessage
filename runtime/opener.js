@@ -1,8 +1,9 @@
-(function (context) {
-  var PostMessage = require('./postmessage');
+const PostMessage = require('./postmessage');
+const utils = require('./utils');
 
-  var OpenerRuntime = function (options, button) {
-    PostMessage.call(this, options);
+const OpenerRuntime = class OpenerRuntime extends PostMessage {
+  constructor(options, button) {
+    super(options);
     if (button) {
       button.addEventListener('click', function (event) {
         event.preventDefault();
@@ -10,19 +11,18 @@
         this.openClient(button.getAttribute('href'));
       }.bind(this));
     }
-  };
-  OpenerRuntime.prototype = new PostMessage;
+  }
 
-  OpenerRuntime.prototype.openClient = function (url) {
-    var client = window.open(url, '_blank');
+  openClient(url) {
+    const client = window.open(url, '_blank');
     if (!client) {
       throw new Error("Unable to open client window");
     }
     this.context = {
       href: '*'
     };
-    var handleMessage = function (message) {
-      var data;
+    const handleMessage = function (message) {
+      let data;
       if (typeof message.data === 'string') {
         data = JSON.parse(message.data);
       } else {
@@ -34,7 +34,7 @@
       }
       this.receive(data.protocol, data.command, data.payload, this.context);
     }.bind(this);
-    var closeCheck = setInterval(function () {
+    const closeCheck = setInterval(function () {
       if (!client || client.closed) {
         // Client window was closed
         this.setClient(null);
@@ -46,12 +46,11 @@
     // Register client window and subscribe to messages
     this.setClient(client);
     window.addEventListener('message', handleMessage);
-  };
+  }
+};
 
-  module.exports = function (options, button) {
-    options = PostMessage.normalizeOptions(options);
-    var runtime = new OpenerRuntime(options, button);
-    return runtime;
-  };
-})(window);
-
+module.exports = function (options, button) {
+  options = utils.normalizeOptions(options);
+  var runtime = new OpenerRuntime(options, button);
+  return runtime;
+};

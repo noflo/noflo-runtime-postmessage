@@ -1,24 +1,24 @@
-(function (context) {
-  var PostMessage = require('./postmessage');
+const PostMessage = require('./postmessage');
+const utils = require('./utils');
 
-  var IframeRuntime = function (options) {
-    PostMessage.call(this, options);
-    this.setClient(context.parent);
-  };
-  IframeRuntime.prototype = new PostMessage;
+const IframeRuntime = class IframeRuntime extends PostMessage {
+  constructor(options) {
+    super(options);
+    this.setClient(window.parent);
+  }
+};
 
-  module.exports = function (options) {
-    options = PostMessage.normalizeOptions(options);
-    var runtime = new IframeRuntime(options);
-    PostMessage.subscribe(context, function (msg, metadata) {
-      if (msg.protocol === 'iframe' && msg.command === 'setcontent') {
-        document.body.innerHTML = msg.payload;
-        return;
-      }
-      runtime.receive(msg.protocol, msg.command, msg.payload, {
-        href: metadata.origin
-      });
+module.exports = function (options) {
+  options = utils.normalizeOptions(options);
+  const runtime = new IframeRuntime(options);
+  PostMessage.subscribe(window, function (msg, metadata) {
+    if (msg.protocol === 'iframe' && msg.command === 'setcontent') {
+      document.body.innerHTML = msg.payload;
+      return;
+    }
+    runtime.receive(msg.protocol, msg.command, msg.payload, {
+      href: metadata.origin
     });
-    return runtime;
-  };
-})(window);
+  });
+  return runtime;
+};
