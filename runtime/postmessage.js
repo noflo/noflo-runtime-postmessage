@@ -1,14 +1,14 @@
-const noflo = require('noflo');
 const Base = require('noflo-runtime-base');
 
-const PostMessage = class PostMessage extends Base {
+class PostMessage extends Base {
   constructor(options = {}) {
-    super(options);
-    if (options.catchExceptions) {
+    const normalizedOptions = options;
+    super(normalizedOptions);
+    if (normalizedOptions.catchExceptions) {
       window.onerror = function (err) {
         if (this.client) {
           this.send('network', 'error', err, {
-            href: this.context ? this.context.href : this.client.location.href
+            href: this.context ? this.context.href : this.client.location.href,
           });
         }
         console.error(err);
@@ -16,15 +16,15 @@ const PostMessage = class PostMessage extends Base {
       }.bind(this);
     }
 
-    if (!options.defaultPermissions.length) {
+    if (!normalizedOptions.defaultPermissions.length) {
       // The iframe runtime is run on user's own computer, so default to all access allowed
-      options.defaultPermissions = [
+      normalizedOptions.defaultPermissions = [
         'protocol:graph',
         'protocol:component',
         'protocol:network',
         'protocol:runtime',
         'component:setsource',
-        'component:getsource'
+        'component:getsource',
       ];
     }
     this.client = null;
@@ -38,45 +38,28 @@ const PostMessage = class PostMessage extends Base {
     if (!this.client) {
       return;
     }
+    let normalizedPayload = payload;
     if (payload instanceof Error) {
-      payload = {
+      normalizedPayload = {
         message: payload.message,
-        stack: payload.stack
+        stack: payload.stack,
       };
     }
-    if (this.context) {
-      ctx = this.context;
+    let { context } = this;
+    if (!context) {
+      context = ctx;
     }
     this.client.postMessage(JSON.stringify({
-      protocol: protocol,
+      protocol,
       command: topic,
-      payload: payload
-    }), ctx.href);
-    this.prototype.send.apply(this, arguments);
-  };
-  send(protocol, topic, payload) {
-    this.send(protocol, topic, payload, this.context);
-  }
-  start() {
-    // Ignored, nothing to do
+      payload: normalizedPayload,
+    }), context.href);
+    super.send(protocol, topic, payload, context);
   }
 
-  subscribe(ctx, callback) {
-    ctx.addEventListener('message', function (message) {
-      let data;
-      if (typeof message.data === 'string') {
-        data = JSON.parse(message.data);
-      } else {
-        data = message.data;
-      }
-      if (!data.protocol) {
-        return;
-      }
-      if (!data.command) {
-        return;
-      }
-      callback(data, message);
-    });
+  sendAll(protocol, topic, payload) {
+    this.send(protocol, topic, payload, this.context);
   }
 }
+
 module.exports = PostMessage;
