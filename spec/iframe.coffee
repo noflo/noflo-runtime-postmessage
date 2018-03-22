@@ -254,14 +254,12 @@ describe 'IFRAME network runtime', ->
               chai.expect(msg.payload.inPorts).to.eql [
                 id: 'in'
                 type: 'all'
-                schema: null
                 required: false
                 addressable: false
                 description: 'Packet to be printed through console.log'
               ,
                 id: 'options'
                 type: 'object'
-                schema: null
                 required: false
                 addressable: false
                 description: 'Options to be passed to console.log'
@@ -269,7 +267,6 @@ describe 'IFRAME network runtime', ->
               chai.expect(msg.payload.outPorts).to.eql [
                 id: 'out'
                 type: 'all'
-                schema: null
                 required: false
                 addressable: false
               ]
