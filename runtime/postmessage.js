@@ -25,6 +25,9 @@ class PostMessage extends Base {
         'protocol:runtime',
         'component:setsource',
         'component:getsource',
+        'network:data',
+        'network:control',
+        'network:status',
       ];
     }
     this.client = null;
