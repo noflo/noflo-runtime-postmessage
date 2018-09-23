@@ -7,6 +7,8 @@ NoFlo runtime for `postMessage` communications, including:
 
 ## Changes
 
+* 0.10.1 (git master)
+  - Exposed the `postMessage` baseclass via `require`
 * 0.10.0 (March 22 2018)
   - Updated to FBP Protocol 0.7
   - Added new capabilities from FBP Protocol: `network:control`, `network:status`, `network:data`
