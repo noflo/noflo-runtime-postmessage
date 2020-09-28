@@ -19,10 +19,10 @@
     "chai": "^4.0.0",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-chai": "0.0.1",
     "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-mocha": "^8.0.0",
     "grunt": "^1.0.1",
-    "grunt-coffeelint": "^0.0.16",
-    "grunt-contrib-coffee": "^2.0.0",
     "grunt-contrib-connect": "^2.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-mocha-phantomjs": "^4.0.0",
@@ -34,7 +34,7 @@
     "noflo"
   ],
   "scripts": {
-    "pretest": "eslint runtime/*.js",
+    "pretest": "eslint *.js runtime/*.js spec/*.js",
     "test": "grunt test"
   }
 }
