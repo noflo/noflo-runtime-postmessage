@@ -9,7 +9,6 @@ exports.normalizeOptions = function (options) {
   return normalizedOptions;
 };
 
-
 exports.subscribe = function (ctx, callback) {
   ctx.addEventListener('message', (message) => {
     let { data } = message;
