@@ -1,5 +1,6 @@
 /node_modules/
 /browser/
+/dist/
 /spec/*.xml
 package-lock.json
 fbp.json
