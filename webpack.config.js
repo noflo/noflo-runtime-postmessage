@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    test: './webpack.entry.js',
+    'noflo-runtime-postmessage': './webpack.entry.js',
   },
   output: {
     path: path.resolve(process.cwd(), 'dist'),

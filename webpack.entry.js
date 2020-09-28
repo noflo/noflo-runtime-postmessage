@@ -1,6 +1,7 @@
 const exported = {
   // eslint-disable-next-line import/no-extraneous-dependencies
   noflo: require('noflo'),
+  'noflo-runtime-postmessage': require('./index'),
 };
 
 if (window) {

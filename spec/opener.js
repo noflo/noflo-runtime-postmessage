@@ -36,9 +36,11 @@ describe('OPENER network runtime', () => {
     window.addEventListener('message', listener, false);
   };
   before((done) => {
-    const iframeElement = document.getElementById('opener');
+    const iframeElement = document.createElement('iframe');
+    iframeElement.src = '/base/html/opener.html?debug';
+    document.body.appendChild(iframeElement);
     iframe = iframeElement.contentWindow;
-    done();
+    iframeElement.onload = () => setTimeout(done, 100);
   });
 
   describe('Runtime Protocol', () => describe('requesting runtime metadata', () => it('should provide it back', (done) => {

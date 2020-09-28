@@ -32,7 +32,9 @@ describe('IFRAME network runtime', () => {
     window.addEventListener('message', listener, false);
   };
   before((done) => {
-    const iframeElement = document.getElementById('iframe');
+    const iframeElement = document.createElement('iframe');
+    iframeElement.src = '/base/html/iframe.html?debug';
+    document.body.appendChild(iframeElement);
     iframe = iframeElement.contentWindow;
     iframeElement.onload = () => done();
   });
