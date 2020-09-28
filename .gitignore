@@ -1,4 +1,6 @@
 /node_modules/
 /browser/
-/spec/*.js
+/dist/
 /spec/*.xml
+package-lock.json
+fbp.json

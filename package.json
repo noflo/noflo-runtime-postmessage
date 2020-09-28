@@ -12,29 +12,34 @@
   },
   "license": "MIT",
   "dependencies": {
-    "noflo-runtime-base": "^0.10.0"
+    "noflo-runtime-base": "^0.11.0"
   },
   "main": "index.js",
   "devDependencies": {
     "chai": "^4.0.0",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.8.0",
-    "grunt": "^1.0.1",
-    "grunt-coffeelint": "^0.0.16",
-    "grunt-contrib-coffee": "^2.0.0",
-    "grunt-contrib-connect": "^2.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-mocha-phantomjs": "^4.0.0",
-    "grunt-noflo-browser": "^1.5.1",
+    "eslint-plugin-chai": "0.0.1",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-mocha": "^8.0.0",
+    "karma": "^5.2.3",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-mocha": "^2.0.1",
+    "karma-mocha-reporter": "^2.2.5",
     "mocha": "^7.0.1",
-    "noflo-core": ">= 0.4.0"
+    "noflo-component-loader": "^0.3.5",
+    "noflo-core": ">= 0.4.0",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
   },
   "keywords": [
     "noflo"
   ],
   "scripts": {
-    "pretest": "eslint runtime/*.js",
-    "test": "grunt test"
+    "lint": "eslint *.js runtime/*.js spec/*.js",
+    "build": "noflo-cache-preheat && webpack --config ./webpack.config.js",
+    "pretest": "npm run lint && npm run build",
+    "test": "karma start ./karma.config.js"
   }
 }

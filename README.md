@@ -1,4 +1,4 @@
-# noflo-runtime-postmessage [![Build Status](https://travis-ci.org/noflo/noflo-runtime-postmessage.svg?branch=master)](https://travis-ci.org/noflo/noflo-runtime-postmessage) [![Greenkeeper badge](https://badges.greenkeeper.io/noflo/noflo-runtime-postmessage.svg)](https://greenkeeper.io/)
+# noflo-runtime-postmessage
 
 NoFlo runtime for `postMessage` communications, including:
 

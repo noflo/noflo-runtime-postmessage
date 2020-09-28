@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="../browser/noflo-runtime-postmessage.js"></script>
+    <script src="../dist/noflo-runtime-postmessage.js"></script>
   </head>
   <body>
-    <a href="http://localhost:8002/html/client.html" id="openclient">Open client</a>
+    <a href="./client.html" id="openclient">Open client</a>
     <script>
       var openClient = document.getElementById('openclient');
       var rt = require('noflo-runtime-postmessage').opener;

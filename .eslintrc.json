@@ -2,7 +2,8 @@
   "extends": "airbnb-base",
   "rules": {
     "func-names": 0,
-    "prefer-arrow-callback": 1
+    "prefer-arrow-callback": 1,
+    "global-require": 0
   },
   "env": {
     "browser": true
