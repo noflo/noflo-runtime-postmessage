@@ -336,6 +336,7 @@ describe('OPENER network runtime', () => {
             type: 'all',
             required: false,
             addressable: false,
+            description: '',
           },
           ]);
         }
