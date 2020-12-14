@@ -7,6 +7,8 @@ NoFlo runtime for `postMessage` communications, including:
 
 ## Changes
 
+* 0.13.0 (December 14th 2020)
+  - Updated to NoFlo 1.4.0 model
 * 0.12.0 (November 25th 2020)
   - Updated to NoFlo 1.3.0 model
 * 0.11.0 (September 28th 2020)
