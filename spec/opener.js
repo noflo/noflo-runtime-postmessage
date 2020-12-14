@@ -62,41 +62,49 @@ describe('OPENER network runtime', () => {
 
   describe('Graph Protocol', () => {
     describe('receiving a graph and nodes', () => it('should provide the nodes back', (done) => {
-      const expects = [{
-        protocol: 'graph',
-        command: 'clear',
-      },
-      {
-        protocol: 'graph',
-        command: 'addnode',
-        payload: {
-          id: 'Foo',
-          component: 'core/Repeat',
-          metadata: {
-            hello: 'World',
+      const expects = [
+        {
+          protocol: 'graph',
+          command: 'addnode',
+          payload: {
+            id: 'Foo',
+            component: 'core/Repeat',
+            metadata: {
+              hello: 'World',
+            },
+            graph: 'foo',
           },
-          graph: 'foo',
         },
-      },
-      {
-        protocol: 'graph',
-        command: 'addnode',
-        payload: {
-          id: 'Bar',
-          component: 'core/Drop',
-          metadata: {},
-          graph: 'foo',
+        {
+          protocol: 'graph',
+          command: 'addnode',
+          payload: {
+            id: 'Bar',
+            component: 'core/Drop',
+            metadata: {},
+            graph: 'foo',
+          },
         },
-      },
       ];
-      receive('graph', expects, done);
+      receive('graph', [
+        {
+          protocol: 'graph',
+          command: 'clear',
+        },
+      ], (err) => {
+        if (err) {
+          done(err);
+          return;
+        }
+        send('graph', 'addnode', expects[0].payload);
+        send('graph', 'addnode', expects[1].payload);
+        receive('graph', expects, done);
+      });
       send('graph', 'clear', {
         baseDir: '/noflo-runtime-iframe',
         id: 'foo',
         main: true,
       });
-      send('graph', 'addnode', expects[1].payload);
-      send('graph', 'addnode', expects[2].payload);
     }));
     describe('receiving an edge', () => it('should provide the edge back', (done) => {
       const expects = [{
