@@ -96,8 +96,9 @@ describe('OPENER network runtime', () => {
           done(err);
           return;
         }
+        send('graph', 'addnode', expects[0].payload);
         send('graph', 'addnode', expects[1].payload);
-        send('graph', 'addnode', expects[2].payload);
+        receive('graph', expects, done);
       });
       send('graph', 'clear', {
         baseDir: '/noflo-runtime-iframe',
